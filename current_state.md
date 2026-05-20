@@ -63,12 +63,15 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
   - `scripts/smoke-installers.ps1` silently installs both roles and validates the installed runtime
 - Published the project publicly:
   - repo: `https://github.com/manna-core/manna-audio-link`
-  - release: `https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.0`
+  - latest release: `https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.1`
   - release assets:
-    - `MannaSoundSync-0.1.0-Receiver-Setup.exe`
-    - `MannaSoundSync-0.1.0-Receiver-Setup.sha256.txt`
-    - `MannaSendAudio-0.1.0-Sender-Setup.exe`
-    - `MannaSendAudio-0.1.0-Sender-Setup.sha256.txt`
+    - `MannaSoundSync-0.1.1-Receiver-Setup.exe`
+    - `MannaSoundSync-0.1.1-Receiver-Setup.sha256.txt`
+    - `MannaSendAudio-0.1.1-Sender-Setup.exe`
+    - `MannaSendAudio-0.1.1-Sender-Setup.sha256.txt`
+- Added `v0.1.1` receiver setup QOL:
+  - final receiver setup screen now offers `Show this main PC's IP for the laptop sender`
+  - the IP helper explicitly tells users to enter the Wi-Fi/Ethernet IPv4 during laptop sender setup
 
 ## Runtime Design
 
@@ -112,7 +115,7 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
 - GitHub verification passed:
   - `manna-core/manna-audio-link` exists and is public
   - `main` tracks `origin/main`
-  - release `v0.1.0` exists with four uploaded assets
+  - release `v0.1.1` exists with four uploaded assets
 
 ## Important Cautions
 

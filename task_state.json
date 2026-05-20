@@ -3,7 +3,7 @@
   "status": "active",
   "phase": "phase 5 public release live-test",
   "active_phase": "phase 5 public release live-test",
-  "current_task": "Live-test the public v0.1.0 receiver and sender installers on the actual main PC and laptop.",
+  "current_task": "Live-test the public v0.1.1 receiver and sender installers on the actual main PC and laptop.",
   "goal": "Build a super simple Windows LAN audio bridge so laptop video audio can play through the main PC headphones while the main PC is gaming fullscreen.",
   "constraints": [
     "LAN-only first",
@@ -52,19 +52,21 @@
     "Verified installed runtime imports for numpy, soundcard, PIL, pystray, and manna_audio_link",
     "Initialized local git repo and committed the release-ready source",
     "Created public GitHub repo https://github.com/manna-core/manna-audio-link",
-    "Published GitHub release v0.1.0 with both installers and checksum files"
+    "Published GitHub release v0.1.0 with both installers and checksum files",
+    "Added receiver installer final-page option to show the main PC IP for laptop setup",
+    "Published GitHub release v0.1.1 with fresh receiver and sender installers"
   ],
   "next_focus": [
-    "Install the receiver from GitHub on the main PC",
-    "Install the sender from GitHub on the laptop",
+    "Install the v0.1.1 receiver from GitHub on the main PC",
+    "Confirm the receiver setup final-page IP helper appears and shows the Wi-Fi/Ethernet IPv4",
+    "Install the v0.1.1 sender from GitHub on the laptop",
     "Confirm the sender installer writes the target IP config correctly",
-    "Confirm the tray receiver reaches Playing state and headphone audio stays clean",
-    "Only after live installer verification, consider a v0.1.1 sender config polish pass"
+    "Confirm the tray receiver reaches Playing state and headphone audio stays clean"
   ],
   "blockers": [
-    "Human live verification from the public installers is still needed on the actual laptop/main-PC pair"
+    "Human live verification from the public v0.1.1 installers is still needed on the actual laptop/main-PC pair"
   ],
   "last_updated": "2026-05-20",
   "last_mode": "build",
-  "last_request": "/build audio-link packaging and GitHub release"
+  "last_request": "Add receiver installer IP helper QOL and publish v0.1.1"
 }
