@@ -18,3 +18,4 @@ $Rows | Format-Table -AutoSize
 
 Write-Host ""
 Write-Host "Use the Wi-Fi/Ethernet IPv4 for the laptop sender unless both machines intentionally use the same VPN."
+Write-Host "Enter that IPv4 address during Manna Send Audio setup on the laptop."

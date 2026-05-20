@@ -27,6 +27,8 @@ On the main PC:
 3. Right-click the tray icon.
 4. Use `Show main PC IPs` if you need the address for the laptop.
 
+The receiver installer can also show the main PC IP on the final setup screen. Leave `Show this main PC's IP for the laptop sender` checked if you are about to install the laptop sender.
+
 On the laptop:
 
 1. Open Windows search.

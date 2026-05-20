@@ -1,6 +1,6 @@
 [project]
 name = "manna-audio-link"
-version = "0.1.0"
+version = "0.1.1"
 description = "Minimal LAN audio bridge for linking a laptop's audio to a main PC's headphones."
 requires-python = ">=3.10"
 dependencies = [
