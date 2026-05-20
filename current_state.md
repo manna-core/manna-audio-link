@@ -79,6 +79,13 @@ Phase 5 - Public release live-test and game-launch stability hardening.
   - receiver can reset its playback device after repeated underruns or a long packet gap
   - source CLI supports `.\run-receiver.ps1 -Preset gaming`
   - latest release: `https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.2`
+- Added `v0.1.3` simplification after live confirmation:
+  - Grayson confirmed the `Gaming / Stable` behavior worked properly
+  - removed the tray preset menu
+  - stable receiver behavior is now the default
+  - the app is back to a simple on/off mental model
+  - source CLI `.\run-receiver.ps1` now uses the stable receiver path by default
+  - latest release: `https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.3`
 
 ## Runtime Design
 
@@ -92,7 +99,7 @@ Phase 5 - Public release live-test and game-launch stability hardening.
   - `numpy`
 - Network transport is UDP on port `44555`.
 - Default packet size is `10 ms` to reduce scheduling/network churn while avoiding oversized UDP packets on normal LANs.
-- Game-launch choppiness is now treated as an audio-output recovery problem, not only a network-buffer problem, because Grayson confirmed larger `-PrebufferPackets 32 -MaxBufferPackets 200` did not fix it and the bad audio state survived after the game closed.
+- Game-launch choppiness is now treated as an audio-output recovery problem, not only a network-buffer problem, because Grayson confirmed larger `-PrebufferPackets 32 -MaxBufferPackets 200` did not fix it and the bad audio state survived after the game closed. The stable recovery behavior is always on as of `v0.1.3`.
 
 ## Verification
 
@@ -132,6 +139,14 @@ Phase 5 - Public release live-test and game-launch stability hardening.
   - `scripts/build-installers.ps1` built fresh `0.1.2` receiver/sender installers and SHA-256 sidecars
   - `scripts\smoke-installers.ps1` silently installed both roles and passed installed runtime import smoke
   - GitHub release `v0.1.2` exists with four uploaded assets
+- `v0.1.3` verification passed:
+  - Python syntax check for package modules
+  - packet unit tests via `unittest`
+  - PowerShell parse check for launch/build/smoke scripts
+  - confirmed old preset strings are removed from runtime code
+  - `scripts/build-installers.ps1` built fresh `0.1.3` receiver/sender installers and SHA-256 sidecars
+  - `scripts\smoke-installers.ps1` silently installed both roles and passed installed runtime import smoke
+  - GitHub release `v0.1.3` exists with four uploaded assets
 
 ## Important Cautions
 

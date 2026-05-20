@@ -1,9 +1,9 @@
 {
   "project": "manna-audio-link",
   "status": "active",
-  "phase": "phase 5 public release live-test and game-launch stability hardening",
-  "active_phase": "phase 5 public release live-test and game-launch stability hardening",
-  "current_task": "Live-test the public v0.1.2 Gaming / Stable receiver preset while launching Subnautica 2.",
+  "phase": "phase 5 public release live-test and stability simplification",
+  "active_phase": "phase 5 public release live-test and stability simplification",
+  "current_task": "Live-test the public v0.1.3 simplified stable receiver while launching Subnautica 2.",
   "goal": "Build a super simple Windows LAN audio bridge so laptop video audio can play through the main PC headphones while the main PC is gaming fullscreen.",
   "constraints": [
     "LAN-only first",
@@ -12,7 +12,8 @@
     "No random virtual audio drivers in the MVP",
     "Keep the direct sender-to-receiver path working before adding discovery or UI",
     "Prefer simple launchers and truthful status over advanced routing features",
-    "Do not hardcode Grayson's main PC IP into the public sender launcher"
+    "Do not hardcode Grayson's main PC IP into the public sender launcher",
+    "Keep the receiver on/off simple; do not expose low-latency/balanced/gaming modes unless a real need returns"
   ],
   "completed": [
     "Created project operating spine",
@@ -39,37 +40,32 @@
     "Added Start Menu shortcut installer and uninstaller",
     "Installed tray dependencies locally",
     "Installed Start Menu shortcut for Manna Sound Sync",
-    "Verified port 44555 was still owned by a live python receiver, so tray launch should wait until the old receiver is stopped",
-    "Added install-laptop-send-shortcut.ps1 and uninstall-laptop-send-shortcut.ps1",
-    "Installed Start Menu shortcut for Manna Send Audio",
     "Added sender config support through %APPDATA%/Manna Audio Link/sender-config.json",
     "Updated the laptop launcher so it reads configured target IP instead of hardcoding the main PC IP",
     "Added public README, MIT license, privacy note, icons, and release notes",
     "Added separate Inno Setup scripts for receiver and sender installers",
     "Added build-installers and smoke-installers scripts",
-    "Built receiver and sender setup EXEs plus SHA-256 sidecars",
-    "Smoke-installed both installers into runtime/install-smoke",
-    "Verified installed runtime imports for numpy, soundcard, PIL, pystray, and manna_audio_link",
-    "Initialized local git repo and committed the release-ready source",
     "Created public GitHub repo https://github.com/manna-core/manna-audio-link",
     "Published GitHub release v0.1.0 with both installers and checksum files",
     "Added receiver installer final-page option to show the main PC IP for laptop setup",
     "Published GitHub release v0.1.1 with fresh receiver and sender installers",
     "Added Low Latency, Balanced, and Gaming / Stable receiver presets",
     "Added receiver playback reset after repeated underruns or a long packet gap",
-    "Published GitHub release v0.1.2 with fresh receiver and sender installers"
+    "Published GitHub release v0.1.2 with fresh receiver and sender installers",
+    "Confirmed Gaming / Stable behavior worked properly in live use",
+    "Removed preset UI and made stable receiver behavior the default",
+    "Published GitHub release v0.1.3 with fresh receiver and sender installers"
   ],
   "next_focus": [
-    "Install the v0.1.2 receiver from GitHub on the main PC",
-    "Choose Gaming / Stable from the tray preset menu",
+    "Install the v0.1.3 receiver from GitHub on the main PC",
     "Launch Subnautica 2 while laptop audio is streaming",
-    "Confirm whether audio recovers automatically if game launch corrupts playback",
-    "Inspect receiver logs for underruns and resets if the symptom remains"
+    "Confirm the simplified default receiver stays clean or recovers automatically",
+    "If the symptom returns, inspect receiver logs for underruns and resets"
   ],
   "blockers": [
-    "Human live verification from the public v0.1.2 receiver is needed on the actual laptop/main-PC pair"
+    "Human live verification from the public v0.1.3 receiver is needed on the actual laptop/main-PC pair"
   ],
   "last_updated": "2026-05-20",
   "last_mode": "build",
-  "last_request": "Fix game-launch choppy electronic audio and add Gaming / Stable receiver preset"
+  "last_request": "Make stable Audio Link behavior default and remove modes"
 }
