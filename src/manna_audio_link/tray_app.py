@@ -34,7 +34,6 @@ class TrayState:
     playback: str = ""
     stats: str = ""
     started_at: datetime | None = None
-    preset: str = "balanced"
 
     def snapshot(self) -> dict[str, str | bool]:
         with self.lock:
@@ -46,7 +45,6 @@ class TrayState:
                 "playback": self.playback,
                 "stats": self.stats,
                 "last_line": self.last_line,
-                "preset": self.preset,
             }
 
 
@@ -147,19 +145,20 @@ def start_receiver(_icon: pystray.Icon | None = None, _item: object | None = Non
         f"\n[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] starting receiver\n"
     )
 
-    with state.lock:
-        preset = state.preset
     command = [
         _python_console_executable(),
         "-m",
         "manna_audio_link",
         "receive",
+        "--prebuffer-packets",
+        "48",
+        "--max-buffer-packets",
+        "240",
+        "--reset-after-underruns",
+        "6",
+        "--reset-after-gap-seconds",
+        "1.5",
     ]
-    if preset == "low-latency":
-        command += ["--prebuffer-packets", "8", "--max-buffer-packets", "80"]
-    elif preset == "gaming":
-        command += ["--prebuffer-packets", "48", "--max-buffer-packets", "240"]
-    command += ["--reset-after-underruns", "6", "--reset-after-gap-seconds", "1.5"]
     creationflags = 0
     if os.name == "nt":
         creationflags = subprocess.CREATE_NO_WINDOW
@@ -184,7 +183,7 @@ def start_receiver(_icon: pystray.Icon | None = None, _item: object | None = Non
     with state.lock:
         state.process = process
 
-    if os.name == "nt" and preset == "gaming":
+    if os.name == "nt":
         try:
             import psutil  # type: ignore[import-not-found]
 
@@ -250,30 +249,6 @@ def stop_receiver(_icon: pystray.Icon | None = None, _item: object | None = None
         process.kill()
         process.wait(timeout=5)
     _set_status("Stopped")
-
-
-def set_preset(preset: str) -> None:
-    with state.lock:
-        state.preset = preset
-    _log(f"preset set to {preset}")
-    running = _is_running()
-    if running:
-        stop_receiver()
-        start_receiver()
-    elif tray_icon is not None:
-        tray_icon.update_menu()
-
-
-def set_low_latency(_icon: pystray.Icon, _item: object) -> None:
-    set_preset("low-latency")
-
-
-def set_balanced(_icon: pystray.Icon, _item: object) -> None:
-    set_preset("balanced")
-
-
-def set_gaming(_icon: pystray.Icon, _item: object) -> None:
-    set_preset("gaming")
 
 
 def _open_path(path: Path) -> None:
@@ -344,23 +319,6 @@ def _stats_text(_item: object | None = None) -> str:
     return f"Stats: {stats}"
 
 
-def _preset_text(_item: object | None = None) -> str:
-    preset = str(state.snapshot()["preset"])
-    label = {
-        "low-latency": "Low Latency",
-        "balanced": "Balanced",
-        "gaming": "Gaming",
-    }.get(preset, preset)
-    return f"Preset: {label}"
-
-
-def _is_preset(preset: str):
-    def checker(_item: object | None = None) -> bool:
-        return state.snapshot()["preset"] == preset
-
-    return checker
-
-
 def _make_icon_image() -> Image.Image:
     image = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
@@ -376,17 +334,8 @@ def _build_menu() -> pystray.Menu:
         pystray.MenuItem(_status_text, None, enabled=False),
         pystray.MenuItem(_remote_text, None, enabled=False),
         pystray.MenuItem(_playback_text, None, enabled=False),
-        pystray.MenuItem(_preset_text, None, enabled=False),
         pystray.MenuItem(_stats_text, None, enabled=False),
         pystray.Menu.SEPARATOR,
-        pystray.MenuItem(
-            "Preset",
-            pystray.Menu(
-                pystray.MenuItem("Low Latency", set_low_latency, checked=_is_preset("low-latency")),
-                pystray.MenuItem("Balanced", set_balanced, checked=_is_preset("balanced")),
-                pystray.MenuItem("Gaming / Stable", set_gaming, checked=_is_preset("gaming")),
-            ),
-        ),
         pystray.MenuItem("Start receiver", start_receiver, enabled=_is_stopped),
         pystray.MenuItem("Stop receiver", stop_receiver, enabled=_is_running),
         pystray.MenuItem("Show main PC IPs", show_local_ips),

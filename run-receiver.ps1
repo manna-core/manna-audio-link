@@ -1,11 +1,9 @@
 param(
     [int]$Port = 44555,
     [string]$OutputDevice = "",
-    [int]$PrebufferPackets = 16,
-    [int]$MaxBufferPackets = 120,
-    [ValidateSet("low-latency", "balanced", "gaming")]
-    [string]$Preset = "balanced",
-    [switch]$HighPriority
+    [int]$PrebufferPackets = 48,
+    [int]$MaxBufferPackets = 240,
+    [switch]$NormalPriority
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,15 +26,6 @@ function Resolve-MannaPython {
 
 $Python = Resolve-MannaPython
 
-if ($Preset -eq "low-latency") {
-    $PrebufferPackets = 8
-    $MaxBufferPackets = 80
-} elseif ($Preset -eq "gaming") {
-    $PrebufferPackets = 48
-    $MaxBufferPackets = 240
-    $HighPriority = $true
-}
-
 $env:PYTHONPATH = Join-Path $Root "src"
 $ArgsList = @(
     "-m", "manna_audio_link",
@@ -52,7 +41,7 @@ if ($OutputDevice.Trim().Length -gt 0) {
     $ArgsList += @("--output-device", $OutputDevice)
 }
 
-if ($HighPriority) {
+if (-not $NormalPriority) {
     $ArgText = ($ArgsList | ForEach-Object {
         if ($_ -match '[\s"]') {
             '"' + ($_ -replace '"', '\"') + '"'
