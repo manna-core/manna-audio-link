@@ -1,9 +1,9 @@
 {
   "project": "manna-audio-link",
   "status": "active",
-  "phase": "phase 5 public release live-test",
-  "active_phase": "phase 5 public release live-test",
-  "current_task": "Live-test the public v0.1.1 receiver and sender installers on the actual main PC and laptop.",
+  "phase": "phase 5 public release live-test and game-launch stability hardening",
+  "active_phase": "phase 5 public release live-test and game-launch stability hardening",
+  "current_task": "Live-test the public v0.1.2 Gaming / Stable receiver preset while launching Subnautica 2.",
   "goal": "Build a super simple Windows LAN audio bridge so laptop video audio can play through the main PC headphones while the main PC is gaming fullscreen.",
   "constraints": [
     "LAN-only first",
@@ -54,19 +54,22 @@
     "Created public GitHub repo https://github.com/manna-core/manna-audio-link",
     "Published GitHub release v0.1.0 with both installers and checksum files",
     "Added receiver installer final-page option to show the main PC IP for laptop setup",
-    "Published GitHub release v0.1.1 with fresh receiver and sender installers"
+    "Published GitHub release v0.1.1 with fresh receiver and sender installers",
+    "Added Low Latency, Balanced, and Gaming / Stable receiver presets",
+    "Added receiver playback reset after repeated underruns or a long packet gap",
+    "Published GitHub release v0.1.2 with fresh receiver and sender installers"
   ],
   "next_focus": [
-    "Install the v0.1.1 receiver from GitHub on the main PC",
-    "Confirm the receiver setup final-page IP helper appears and shows the Wi-Fi/Ethernet IPv4",
-    "Install the v0.1.1 sender from GitHub on the laptop",
-    "Confirm the sender installer writes the target IP config correctly",
-    "Confirm the tray receiver reaches Playing state and headphone audio stays clean"
+    "Install the v0.1.2 receiver from GitHub on the main PC",
+    "Choose Gaming / Stable from the tray preset menu",
+    "Launch Subnautica 2 while laptop audio is streaming",
+    "Confirm whether audio recovers automatically if game launch corrupts playback",
+    "Inspect receiver logs for underruns and resets if the symptom remains"
   ],
   "blockers": [
-    "Human live verification from the public v0.1.1 installers is still needed on the actual laptop/main-PC pair"
+    "Human live verification from the public v0.1.2 receiver is needed on the actual laptop/main-PC pair"
   ],
   "last_updated": "2026-05-20",
   "last_mode": "build",
-  "last_request": "Add receiver installer IP helper QOL and publish v0.1.1"
+  "last_request": "Fix game-launch choppy electronic audio and add Gaming / Stable receiver preset"
 }

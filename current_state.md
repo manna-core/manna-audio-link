@@ -10,7 +10,7 @@ Create a super simple Windows LAN audio bridge:
 
 ## Current Phase
 
-Phase 5 - Installer packaging and public GitHub release prep, with the proven Phase 1 LAN path preserved.
+Phase 5 - Public release live-test and game-launch stability hardening.
 
 ## Built This Batch
 
@@ -72,6 +72,13 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
 - Added `v0.1.1` receiver setup QOL:
   - final receiver setup screen now offers `Show this main PC's IP for the laptop sender`
   - the IP helper explicitly tells users to enter the Wi-Fi/Ethernet IPv4 during laptop sender setup
+- Added `v0.1.2` game-launch stability hardening:
+  - tray receiver now has `Low Latency`, `Balanced`, and `Gaming / Stable` presets
+  - `Gaming / Stable` uses a larger receiver buffer
+  - `Gaming / Stable` raises receiver process priority when Windows allows it
+  - receiver can reset its playback device after repeated underruns or a long packet gap
+  - source CLI supports `.\run-receiver.ps1 -Preset gaming`
+  - latest release: `https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.2`
 
 ## Runtime Design
 
@@ -85,6 +92,7 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
   - `numpy`
 - Network transport is UDP on port `44555`.
 - Default packet size is `10 ms` to reduce scheduling/network churn while avoiding oversized UDP packets on normal LANs.
+- Game-launch choppiness is now treated as an audio-output recovery problem, not only a network-buffer problem, because Grayson confirmed larger `-PrebufferPackets 32 -MaxBufferPackets 200` did not fix it and the bad audio state survived after the game closed.
 
 ## Verification
 
@@ -116,6 +124,14 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
   - `manna-core/manna-audio-link` exists and is public
   - `main` tracks `origin/main`
   - release `v0.1.1` exists with four uploaded assets
+- `v0.1.2` verification passed:
+  - Python syntax check for package modules
+  - packet unit tests via `unittest`
+  - PowerShell parse check for launch/build/smoke scripts
+  - receiver CLI help exposes playback reset options
+  - `scripts/build-installers.ps1` built fresh `0.1.2` receiver/sender installers and SHA-256 sidecars
+  - `scripts\smoke-installers.ps1` silently installed both roles and passed installed runtime import smoke
+  - GitHub release `v0.1.2` exists with four uploaded assets
 
 ## Important Cautions
 
@@ -130,3 +146,4 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
 - The laptop sender shortcut is intentionally foreground-only for now. Do not add a laptop tray app, pairing, discovery, cloud, accounts, or extra UI before this direct shortcut path is proven pleasant.
 - If the main PC IP changes, use `Configure Manna Send Audio` or rerun `configure-sender.ps1`; do not reintroduce a hardcoded target IP into the launcher.
 - The published release is locally smoke-tested but still needs a real two-machine installer-path test on the actual main PC and laptop before calling the release fully field-proven.
+- If game launch still corrupts audio in `Gaming / Stable`, inspect receiver logs for `underruns`, `resets`, and whether resets occur after the game launch. The next likely fix would be moving playback onto a more robust output backend or adding an explicit tray `Restart receiver` recovery button.

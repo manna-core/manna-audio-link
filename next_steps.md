@@ -2,22 +2,21 @@
 
 ## Best Next Move
 
-Live-test the public `v0.1.1` installer path on the actual two-machine setup:
+Live-test the public `v0.1.2` game-launch stability path:
 
-1. Main PC: download and run `MannaSoundSync-0.1.1-Receiver-Setup.exe` from the GitHub release.
-2. Main PC: on the final setup screen, leave `Show this main PC's IP for the laptop sender` checked.
-3. Main PC: use the shown Wi-Fi/Ethernet IPv4 address for the laptop sender setup.
-4. Main PC: launch `Manna Sound Sync` from Windows search and confirm the tray receiver says `Waiting for laptop`.
-5. Laptop: download and run `MannaSendAudio-0.1.1-Sender-Setup.exe` from the GitHub release.
-6. Laptop: enter the main PC IPv4 address during sender setup.
-7. Laptop: launch `Manna Send Audio` from Windows search.
-8. Confirm the visible sender stats move, the receiver tray changes to `Playing`, and headphone audio stays clean.
-9. Stop the laptop sender with `Ctrl+C`.
+1. Main PC: install `MannaSoundSync-0.1.2-Receiver-Setup.exe` from the GitHub release.
+2. Main PC: launch `Manna Sound Sync` from Windows search.
+3. Main PC: right-click the tray icon and choose `Preset` -> `Gaming / Stable`.
+4. Laptop: keep using the sender installer/app; reinstall only if needed.
+5. Start laptop audio and confirm normal playback first.
+6. Launch `Subnautica 2`.
+7. If audio gets weird, wait a few seconds and check whether it recovers automatically.
+8. Right-click tray -> `Open logs` and inspect whether `resets` increased.
 
 Release:
 
 ```text
-https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.1
+https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.2
 ```
 
 ## If The Main PC IP Changes
@@ -42,16 +41,22 @@ The sender target lives at:
 
 ## If Audio Quality Regresses
 
+First try the tray preset:
+
+```text
+Manna Sound Sync tray -> Preset -> Gaming / Stable
+```
+
+Source users can run:
+
+```powershell
+.\run-receiver.ps1 -Preset gaming
+```
+
 If it sounds distorted and sender `clipped` rises, lower gain:
 
 ```powershell
 .\run-sender.ps1 -Target MAIN_PC_IP -Gain 0.65
-```
-
-If it crackles and receiver `missing`, `late`, or `underruns` rises, increase prebuffer:
-
-```powershell
-.\run-receiver.ps1 -PrebufferPackets 24
 ```
 
 ## Release Commands
@@ -71,17 +76,17 @@ Smoke test installers:
 Artifacts:
 
 ```text
-dist\installer\MannaSoundSync-0.1.1-Receiver-Setup.exe
-dist\installer\MannaSendAudio-0.1.1-Sender-Setup.exe
+dist\installer\MannaSoundSync-0.1.2-Receiver-Setup.exe
+dist\installer\MannaSendAudio-0.1.2-Sender-Setup.exe
 ```
 
 ## Recommended Next Product Move
 
-After the installer live test, the best next candidate is not discovery yet. It is a tiny sender config quality pass:
+After the Subnautica 2 launch test:
 
-- show the configured target before launch
-- make `Configure Manna Send Audio` easier to find after install
-- optionally add a `stable` receiver preset only if real installer-path audio crackles
+- if `Gaming / Stable` recovers automatically, keep v0.1.2 as the public baseline
+- if it still stays corrupted, add an explicit tray `Restart receiver` action and consider a more robust playback backend
+- only consider discovery/pairing after game-launch stability is proven
 
 ## Not Yet
 
