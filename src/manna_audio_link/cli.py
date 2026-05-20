@@ -83,6 +83,7 @@ class ReceiverStats:
     underruns: int = 0
     missing_packets: int = 0
     late_packets: int = 0
+    output_resets: int = 0
 
 
 def _block_frames(sample_rate: int, block_ms: int) -> int:
@@ -224,21 +225,57 @@ def run_receiver(args: argparse.Namespace) -> int:
         print(f"Prebuffering {prebuffer_packets} packets...", flush=True)
         buffer.wait_for_depth(prebuffer_packets, timeout=5.0)
 
-        with AudioOutput(
-            sample_rate=first.sample_rate,
-            channels=first.channels,
-            device_fragment=args.output_device,
-            block_frames=first.frames,
-        ) as output:
+        output_context: AudioOutput | None = None
+        output: AudioOutput | None = None
+
+        def open_output() -> AudioOutput:
+            context = AudioOutput(
+                sample_rate=first.sample_rate,
+                channels=first.channels,
+                device_fragment=args.output_device,
+                block_frames=first.frames,
+            )
+            opened = context.__enter__()
+            nonlocal output_context
+            output_context = context
+            return opened
+
+        def close_output() -> None:
+            nonlocal output_context
+            if output_context is not None:
+                output_context.__exit__(None, None, None)
+                output_context = None
+
+        def reset_output(reason: str) -> AudioOutput:
+            nonlocal output
+            stats.output_resets += 1
+            print(f"Resetting playback device after {reason}...", flush=True)
+            close_output()
+            time.sleep(0.2)
+            output = open_output()
+            print(f"Playing through: {output.device_name}", flush=True)
+            return output
+
+        try:
+            output = open_output()
             print(f"Playing through: {output.device_name}", flush=True)
             last_stats = time.monotonic()
             last_frames = first.frames
             last_played_sequence: int | None = None
+            consecutive_underruns = 0
+            last_packet_time = time.monotonic()
 
             while True:
                 packet = buffer.pop(timeout=0.25)
                 if packet is None:
                     stats.underruns += 1
+                    consecutive_underruns += 1
+                    if (
+                        args.reset_after_underruns > 0
+                        and consecutive_underruns >= args.reset_after_underruns
+                    ):
+                        output = reset_output(f"{consecutive_underruns} underruns")
+                        consecutive_underruns = 0
                     output.play_silence(last_frames)
                     continue
 
@@ -248,6 +285,14 @@ def run_receiver(args: argparse.Namespace) -> int:
                 ):
                     continue
 
+                now = time.monotonic()
+                if (
+                    args.reset_after_gap_seconds > 0
+                    and now - last_packet_time >= args.reset_after_gap_seconds
+                ):
+                    output = reset_output(f"{round(now - last_packet_time, 2)}s packet gap")
+                last_packet_time = now
+                consecutive_underruns = 0
                 last_frames = packet.frames
                 if last_played_sequence is not None:
                     expected = (last_played_sequence + 1) & 0xFFFFFFFF
@@ -272,9 +317,12 @@ def run_receiver(args: argparse.Namespace) -> int:
                         "missing": stats.missing_packets,
                         "late": stats.late_packets,
                         "underruns": stats.underruns,
+                        "resets": stats.output_resets,
                         "bad": stats.invalid_packets,
                     },
                 )
+        finally:
+            close_output()
     except KeyboardInterrupt:
         print("\nReceiver stopped.", flush=True)
         return 0
@@ -312,6 +360,8 @@ def build_parser() -> argparse.ArgumentParser:
     receive.add_argument("--prebuffer-packets", type=int, default=DEFAULT_PREBUFFER_PACKETS)
     receive.add_argument("--max-buffer-packets", type=int, default=DEFAULT_MAX_BUFFER_PACKETS)
     receive.add_argument("--gap-fill-packets", type=int, default=3)
+    receive.add_argument("--reset-after-underruns", type=int, default=0)
+    receive.add_argument("--reset-after-gap-seconds", type=float, default=0.0)
     receive.set_defaults(func=run_receiver)
 
     devices = subparsers.add_parser("devices", help="list audio devices")

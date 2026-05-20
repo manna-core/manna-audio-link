@@ -26,6 +26,7 @@ On the main PC:
 2. Launch `Manna Sound Sync`.
 3. Right-click the tray icon.
 4. Use `Show main PC IPs` if you need the address for the laptop.
+5. If audio breaks up while launching a game, choose `Preset` -> `Gaming / Stable` from the tray menu.
 
 The receiver installer can also show the main PC IP on the final setup screen. Leave `Show this main PC's IP for the laptop sender` checked if you are about to install the laptop sender.
 
@@ -126,6 +127,22 @@ If it crackles or drops out, raise the main PC receiver prebuffer:
 ```
 
 Receiver status reports `missing`, `late`, and `underruns`. Sender status reports `peak` and `clipped`.
+
+## Game Launch Choppiness
+
+Some games can briefly starve Windows audio scheduling while they launch or compile shaders. If the stream becomes robotic or stays broken after closing the game:
+
+1. Right-click the `Manna Sound Sync` tray icon.
+2. Choose `Preset`.
+3. Select `Gaming / Stable`.
+
+The Gaming preset uses a larger receiver buffer, raises receiver process priority when Windows allows it, and resets the playback device after repeated underruns or a long packet gap.
+
+Source users can test the same path manually:
+
+```powershell
+.\run-receiver.ps1 -Preset gaming
+```
 
 ## Build Installers
 
