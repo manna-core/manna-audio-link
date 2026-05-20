@@ -2,17 +2,23 @@
 
 ## Best Next Move
 
-Publish and live-test the packaged release:
+Live-test the public `v0.1.0` installer path on the actual two-machine setup:
 
-1. Push the source repo to GitHub under `manna-core/manna-audio-link`.
-2. Create GitHub release `v0.1.0`.
-3. Attach both installer EXEs and SHA-256 sidecars.
-4. On the main PC, install `MannaSoundSync-0.1.0-Receiver-Setup.exe`.
-5. Launch `Manna Sound Sync` from Windows search and confirm the tray receiver says `Waiting for laptop`.
-6. On the laptop, install `MannaSendAudio-0.1.0-Sender-Setup.exe`.
-7. Enter the main PC IPv4 address during sender setup.
-8. Launch `Manna Send Audio` from Windows search.
-9. Confirm the visible sender stats move, the receiver tray changes to `Playing`, and headphone audio stays clean.
+1. Main PC: download and run `MannaSoundSync-0.1.0-Receiver-Setup.exe` from the GitHub release.
+2. Main PC: launch `Manna Sound Sync` from Windows search.
+3. Main PC: confirm the tray receiver says `Waiting for laptop`.
+4. Main PC: use `Show main PC IPs` if the laptop needs the current IPv4 address.
+5. Laptop: download and run `MannaSendAudio-0.1.0-Sender-Setup.exe` from the GitHub release.
+6. Laptop: enter the main PC IPv4 address during sender setup.
+7. Laptop: launch `Manna Send Audio` from Windows search.
+8. Confirm the visible sender stats move, the receiver tray changes to `Playing`, and headphone audio stays clean.
+9. Stop the laptop sender with `Ctrl+C`.
+
+Release:
+
+```text
+https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.0
+```
 
 ## If The Main PC IP Changes
 
@@ -68,6 +74,14 @@ Artifacts:
 dist\installer\MannaSoundSync-0.1.0-Receiver-Setup.exe
 dist\installer\MannaSendAudio-0.1.0-Sender-Setup.exe
 ```
+
+## Recommended Next Product Move
+
+After the installer live test, the best v0.1.1 candidate is not discovery yet. It is a tiny sender config quality pass:
+
+- show the configured target before launch
+- make `Configure Manna Send Audio` easier to find after install
+- optionally add a `stable` receiver preset only if real installer-path audio crackles
 
 ## Not Yet
 

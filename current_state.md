@@ -61,6 +61,14 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
   - the sender installer asks for the main PC receiver IP and writes the sender config
   - `scripts/build-installers.ps1` stages the app plus bundled Python runtime and builds both installers
   - `scripts/smoke-installers.ps1` silently installs both roles and validates the installed runtime
+- Published the project publicly:
+  - repo: `https://github.com/manna-core/manna-audio-link`
+  - release: `https://github.com/manna-core/manna-audio-link/releases/tag/v0.1.0`
+  - release assets:
+    - `MannaSoundSync-0.1.0-Receiver-Setup.exe`
+    - `MannaSoundSync-0.1.0-Receiver-Setup.sha256.txt`
+    - `MannaSendAudio-0.1.0-Sender-Setup.exe`
+    - `MannaSendAudio-0.1.0-Sender-Setup.sha256.txt`
 
 ## Runtime Design
 
@@ -101,6 +109,10 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
   - `scripts\smoke-installers.ps1` silently installed both roles into `runtime\install-smoke`
   - installed runtime import smoke passed for `numpy`, `soundcard`, `PIL`, `pystray`, and `manna_audio_link`
   - sender installer config-write path produced a target config with UDP port `44555`
+- GitHub verification passed:
+  - `manna-core/manna-audio-link` exists and is public
+  - `main` tracks `origin/main`
+  - release `v0.1.0` exists with four uploaded assets
 
 ## Important Cautions
 
@@ -114,3 +126,4 @@ Phase 5 - Installer packaging and public GitHub release prep, with the proven Ph
 - Python 3.14 dependency install worked on this machine; if `soundcard` or `numpy` wheels lag on the laptop, use Python 3.12 for the project venv rather than rewriting the app.
 - The laptop sender shortcut is intentionally foreground-only for now. Do not add a laptop tray app, pairing, discovery, cloud, accounts, or extra UI before this direct shortcut path is proven pleasant.
 - If the main PC IP changes, use `Configure Manna Send Audio` or rerun `configure-sender.ps1`; do not reintroduce a hardcoded target IP into the launcher.
+- The published release is locally smoke-tested but still needs a real two-machine installer-path test on the actual main PC and laptop before calling the release fully field-proven.
